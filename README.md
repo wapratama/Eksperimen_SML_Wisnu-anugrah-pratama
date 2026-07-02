@@ -2,20 +2,22 @@
 
 Repository ini berisi tahapan eksperimen dan otomatisasi preprocessing dataset
 **Facies Classification dari Wireline Logs** (Hugoton & Panoma Fields, Kansas)
-sebagai bagian dari Kriteria 1 proyek akhir kelas Membangun Sistem Machine
-Learning (MSML) — Dicoding.
+sebagai bagian dari **Proyek Akhir Kelas Membangun Sistem Machine
+Learning (MSML) Dicoding** untuk Kriteria 1.
 
 ## Struktur Repository
 
 ```
 Eksperimen_SML_Wisnu-anugrah-pratama/
 ├── .github/workflows/preprocessing.yml       # CI: otomatisasi preprocessing
-├── facies_raw/facies_raw.csv                 # Dataset mentah (3,232 baris)
-├── preprocessing/facies_preprocessing.csv    # Output hasil preprocessing
-├── Eksperimen_Wisnu-anugrah-pratama.ipynb    # Notebook eksperimen manual
-├── automate_Wisnu-anugrah-pratama.py         # Script otomatisasi preprocessing
+├── facies_raw.csv                            # Dataset raw dari sumber asli (3,232 baris)
+├── preprocessing/
+│   └── Eksperimen_Wisnu-anugrah-pratama.ipynb    # Notebook eksperimen manual
+│   └── automate_Wisnu-anugrah-pratama.py         # Script otomatisasi preprocessing
+│   └── facies_preprocessing.csv                  # Output hasil preprocessing
 └── README.md
 ```
+*Catatan: Tersimpan pula beberapa gambar hasil EDA dari notebook di folder `preprocessing/`*
 
 ## Dataset
 
