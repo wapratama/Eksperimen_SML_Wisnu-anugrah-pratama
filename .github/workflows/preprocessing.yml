@@ -1,0 +1,63 @@
+name: Preprocessing Pipeline CI
+
+# Trigger: setiap kali ada push ke branch main yang menyentuh raw data,
+# script otomatisasi, atau dependency spec, DAN bisa dijalankan manual
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'facies_raw.csv'
+      - 'preprocessing/automate_Wisnu-anugrah-pratama.py'
+      - 'pyproject.toml'
+      - 'uv.lock'
+  workflow_dispatch:
+
+jobs:
+  preprocessing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Set up Python 3.12.7
+        run: uv python install 3.12.7
+
+      - name: Check Env
+        run: |
+          uv --version
+          uv run python --version
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Run automated preprocessing (download + preprocess)
+        run: |
+          uv run python preprocessing/automate_Wisnu-anugrah-pratama.py \
+            --input facies_raw.csv \
+            --output preprocessing/facies_preprocessing.csv \
+            --force-download
+
+      - name: Verify output exists
+        run: |
+          if [ ! -f "preprocessing/facies_preprocessing.csv" ]; then
+            echo "ERROR: File hasil preprocessing tidak ditemukan!"
+            exit 1
+          fi
+          echo "Preprocessing berhasil. Ukuran file:"
+          ls -lh preprocessing/facies_preprocessing.csv
+          echo "Jumlah baris:"
+          wc -l preprocessing/facies_preprocessing.csv
+
+      - name: Commit & push hasil terbaru (raw data + preprocessing)
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add facies_raw.csv preprocessing/facies_preprocessing.csv
+          git diff --staged --quiet || git commit -m "chore: update raw & preprocessed dataset [automated]"
+          git push
